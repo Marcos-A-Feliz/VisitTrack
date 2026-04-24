@@ -3,47 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36429.23 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisitTrack.API", "VisitTrack.API.csproj", "{B35299D4-C516-46EE-A6AB-F275755B742C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisitTrack.API", "VisitTrack.API.csproj", "{42324C1B-E3B8-4F88-98F3-FAFC0FD533CA}"
 EndProject
-<<<<<<< Updated upstream
-=======
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisitTrack.Domain", "..\VisitTrack.Domain\VisitTrack.Domain.csproj", "{E56E08B0-039B-4882-8428-922654B3A135}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisitTrack.Infraestructure", "..\VisitTrack.Infraestructure\VisitTrack.Infraestructure.csproj", "{54090D0A-9E47-46DC-A03A-A58CF606A3B1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisitTrack.Application", "..\VisitTrack.Application\VisitTrack.Application.csproj", "{ABC13992-C782-402A-BDEB-595A2E6742C3}"
-EndProject
->>>>>>> Stashed changes
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B35299D4-C516-46EE-A6AB-F275755B742C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B35299D4-C516-46EE-A6AB-F275755B742C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B35299D4-C516-46EE-A6AB-F275755B742C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B35299D4-C516-46EE-A6AB-F275755B742C}.Release|Any CPU.Build.0 = Release|Any CPU
-<<<<<<< Updated upstream
-=======
-		{E56E08B0-039B-4882-8428-922654B3A135}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E56E08B0-039B-4882-8428-922654B3A135}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E56E08B0-039B-4882-8428-922654B3A135}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E56E08B0-039B-4882-8428-922654B3A135}.Release|Any CPU.Build.0 = Release|Any CPU
-		{54090D0A-9E47-46DC-A03A-A58CF606A3B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{54090D0A-9E47-46DC-A03A-A58CF606A3B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{54090D0A-9E47-46DC-A03A-A58CF606A3B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{54090D0A-9E47-46DC-A03A-A58CF606A3B1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ABC13992-C782-402A-BDEB-595A2E6742C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ABC13992-C782-402A-BDEB-595A2E6742C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ABC13992-C782-402A-BDEB-595A2E6742C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ABC13992-C782-402A-BDEB-595A2E6742C3}.Release|Any CPU.Build.0 = Release|Any CPU
->>>>>>> Stashed changes
+		{42324C1B-E3B8-4F88-98F3-FAFC0FD533CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42324C1B-E3B8-4F88-98F3-FAFC0FD533CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42324C1B-E3B8-4F88-98F3-FAFC0FD533CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42324C1B-E3B8-4F88-98F3-FAFC0FD533CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {65A573A4-4A11-4BC3-8D4E-BF28258BFBE5}
+		SolutionGuid = {21CB4432-A6A7-401E-9D52-49275C9E8D6A}
 	EndGlobalSection
 EndGlobal
