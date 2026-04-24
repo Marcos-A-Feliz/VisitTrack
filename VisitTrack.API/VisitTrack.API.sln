@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisitTrack.Application", ".
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisitTrack.Domain", "..\VisitTrack.Repositories\VisitTrack.Domain.csproj", "{655A166A-F664-468D-A22F-C9195D4F49F0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisitTrack.Infraestructure", "..\VisitTrack.Infraestructure\VisitTrack.Infraestructure.csproj", "{9C5217E9-F826-43CB-BED7-7EDE61E793AC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{655A166A-F664-468D-A22F-C9195D4F49F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{655A166A-F664-468D-A22F-C9195D4F49F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{655A166A-F664-468D-A22F-C9195D4F49F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C5217E9-F826-43CB-BED7-7EDE61E793AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C5217E9-F826-43CB-BED7-7EDE61E793AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C5217E9-F826-43CB-BED7-7EDE61E793AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C5217E9-F826-43CB-BED7-7EDE61E793AC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
