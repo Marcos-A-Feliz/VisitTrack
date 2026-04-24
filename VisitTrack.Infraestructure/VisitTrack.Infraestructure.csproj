@@ -1,19 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
 	<ItemGroup>
-		<Folder Include="Data\" />
-		<Folder Include="Contracts\" />
-		<Folder Include="Repositories\" />
-	</ItemGroup>>
+		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
+	</ItemGroup>
 
-    <ItemGroup>
-    		<ProjectReference Include="..\VisitTrack.Domain\VisitTrack.Domain.csproj" />
-  	</ItemGroup>
-	
+	<ItemGroup>
+		<ProjectReference Include="..\VisitTrack.Domain\VisitTrack.Domain.csproj" />
+	</ItemGroup>
+
 </Project>
