@@ -6,10 +6,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Data\" />
-    <Folder Include="Contracts\" />
-    <Folder Include="Repositories\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Data\" />
+		<Folder Include="Contracts\" />
+		<Folder Include="Repositories\" />
+	</ItemGroup>>
 
+    <ItemGroup>
+    		<ProjectReference Include="..\VisitTrack.Domain\VisitTrack.Domain.csproj" />
+  	</ItemGroup>
+	
 </Project>
