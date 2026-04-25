@@ -56,7 +56,7 @@ public class VisitasController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = r.Id }, r);
     }
 
-    [HttpPost("{id}/salida")]
+    [HttpPut("{id}/salida")]
     public async Task<IActionResult> Salida(int id)
     {
         var r = await _svc.RegistrarSalidaAsync(id);
@@ -78,5 +78,15 @@ public class VisitasController : ControllerBase
         if (visita == null)
             return NotFound(new { message = "Visita no encontrada" });
         return Ok(new { message = "Visita cancelada correctamente", visita });
+    }
+
+    [HttpPut("{id}")]
+    [Authorize(Roles = "Admin,Guardia")]
+    public async Task<IActionResult> Update(int id, [FromBody] UpdateVisitaDto dto)
+    {
+        var visita = await _svc.UpdateAsync(id, dto);
+        if (visita == null)
+            return NotFound(new { message = "Visita no encontrada" });
+        return Ok(visita);
     }
 }

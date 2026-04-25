@@ -110,4 +110,19 @@ public class VisitaService : IVisitaService
 
         return _mapper.Map<VisitaDto>(visita);
     }
+    public async Task<VisitaDto?> UpdateAsync(int id, UpdateVisitaDto dto)
+    {
+        var visita = await _unitOfWork.Visitas.GetByIdAsync(id);
+        if (visita == null) return null;
+
+        visita.Motivo = dto.Motivo ?? visita.Motivo;
+        visita.Estado = dto.Estado ?? visita.Estado;
+        visita.EmpleadoResponsableId = dto.EmpleadoResponsableId ?? visita.EmpleadoResponsableId;
+        visita.AreaId = dto.AreaId ?? visita.AreaId;
+
+        await _unitOfWork.Visitas.UpdateAsync(visita);
+        await _unitOfWork.SaveChangesAsync();
+
+        return _mapper.Map<VisitaDto>(visita);
+    }
 }

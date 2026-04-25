@@ -15,4 +15,5 @@ public interface IVisitaService
     Task<VisitaDto?> RegistrarSalidaAsync(int id);
     Task<VisitaDto?> CancelarAsync(int id);  
     Task<bool> DeleteAsync(int id);
+    Task<VisitaDto?> UpdateAsync(int id, UpdateVisitaDto dto);
 }

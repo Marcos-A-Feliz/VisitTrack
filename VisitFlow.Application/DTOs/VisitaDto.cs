@@ -35,6 +35,7 @@ public class CreateVisitaDto
 public class UpdateVisitaDto
 {
     public string? Motivo { get; set; }
+    public string? Estado { get; set; }  
     public int? EmpleadoResponsableId { get; set; }
     public int? AreaId { get; set; }
 }
