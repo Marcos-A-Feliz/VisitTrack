@@ -10,10 +10,17 @@ public class VisitaRepository : GenericRepository<Visita>, IVisitaRepository
     public VisitaRepository(VisitTrackDbContext context) : base(context) { }
 
     private IQueryable<Visita> BaseQuery()
-        => _dbSet.Include(v => v.Visitante)
-                  .Include(v => v.EmpleadoResponsable)
-                  .Include(v => v.Area)
-                  .Include(v => v.User);
+        => _dbSet
+            .Include(v => v.Visitante)
+            .Include(v => v.EmpleadoResponsable)
+            .Include(v => v.Area)
+            .Include(v => v.User);
+
+    public override async Task<IEnumerable<Visita>> GetAllAsync()
+        => await BaseQuery().ToListAsync();
+
+    public override async Task<Visita?> GetByIdAsync(int id)
+        => await BaseQuery().FirstOrDefaultAsync(v => v.Id == id);
 
     public async Task<IEnumerable<Visita>> GetByVisitanteAsync(int visitanteId)
         => await BaseQuery().Where(v => v.VisitanteId == visitanteId).ToListAsync();
@@ -33,5 +40,7 @@ public class VisitaRepository : GenericRepository<Visita>, IVisitaRepository
             .ToListAsync();
 
     public async Task<IEnumerable<Visita>> GetActivasAsync()
-        => await BaseQuery().Where(v => v.Estado == "EnCurso" || v.Estado == "Pendiente").ToListAsync();
+        => await BaseQuery()
+            .Where(v => v.Estado == "EnCurso" || v.Estado == "Pendiente")
+            .ToListAsync();
 }

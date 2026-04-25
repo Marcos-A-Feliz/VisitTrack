@@ -1,41 +1,86 @@
+using System.Text;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using VisitTrack.Application.Contracts;
+using VisitTrack.Application.Mappings;
+using VisitTrack.Application.Services;
+using VisitTrack.Infrastructure.Contracts;
+using VisitTrack.Infrastructure.Data;
+using VisitTrack.Infrastructure.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+// ── Base de datos ─────────────────────────────────────────────────────────────
+builder.Services.AddDbContext<VisitTrackDbContext>(o =>
+    o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// ── CORS ──────────────────────────────────────────────────────────────────────
+builder.Services.AddCors(o =>
+    o.AddPolicy("AllowAll", p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+
+// ── Repositorios / UnitOfWork ─────────────────────────────────────────────────
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+// ── Servicios de aplicación ───────────────────────────────────────────────────
+builder.Services.AddScoped<IVisitanteService, VisitanteService>();
+builder.Services.AddScoped<IEmpleadoService,  EmpleadoService>();
+builder.Services.AddScoped<IAreaService,       AreaService>();
+builder.Services.AddScoped<IVisitaService,     VisitaService>();
+
+// ── AutoMapper ────────────────────────────────────────────────────────────────
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+// ── JWT ───────────────────────────────────────────────────────────────────────
+var jwt = builder.Configuration.GetSection("JwtSettings");
+var key = Encoding.UTF8.GetBytes(jwt["SecretKey"]!);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(o =>
+    {
+        o.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer           = true,
+            ValidateAudience         = true,
+            ValidateLifetime         = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer              = jwt["Issuer"],
+            ValidAudience            = jwt["Audience"],
+            IssuerSigningKey         = new SymmetricSecurityKey(key),
+            ClockSkew                = TimeSpan.Zero
+        };
+    });
+
+builder.Services.AddAuthorization();
+
+// ── Controllers ───────────────────────────────────────────────────────────────
+builder.Services.AddControllers()
+    .AddJsonOptions(o =>
+    {
+        o.JsonSerializerOptions.ReferenceHandler        = ReferenceHandler.IgnoreCycles;
+        o.JsonSerializerOptions.DefaultIgnoreCondition  = JsonIgnoreCondition.WhenWritingNull;
+    });
+
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// ── Seed ──────────────────────────────────────────────────────────────────────
+using (var scope = app.Services.CreateScope())
 {
-    app.MapOpenApi();
+    var db = scope.ServiceProvider.GetRequiredService<VisitTrackDbContext>();
+    await DbSeeder.Initialize(db);
 }
 
-app.UseHttpsRedirection();
+if (app.Environment.IsDevelopment())
+    app.MapOpenApi();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app.UseCors("AllowAll");
+app.UseStaticFiles();        // sirve wwwroot/index.html
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
+app.MapFallbackToFile("index.html");
 
 app.Run();
-
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
