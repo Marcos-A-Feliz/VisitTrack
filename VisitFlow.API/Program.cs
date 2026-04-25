@@ -1,8 +1,9 @@
-using System.Text;
-using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.Text.Json.Serialization;
+using VisitFlow.API.Helpers;
 using VisitFlow.Application.Contracts;
 using VisitFlow.Application.Mappings;
 using VisitFlow.Application.Services;
@@ -13,8 +14,8 @@ using VisitFlow.Infrastructure.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 // ── Base de datos ─────────────────────────────────────────────────────────────
-builder.Services.AddDbContext<VisitFlowDbContext>(o =>
-    o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<VisitFlowDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MainConnection"))); ;
 
 // ── CORS ──────────────────────────────────────────────────────────────────────
 builder.Services.AddCors(o =>
@@ -28,6 +29,8 @@ builder.Services.AddScoped<IVisitanteService, VisitanteService>();
 builder.Services.AddScoped<IEmpleadoService,  EmpleadoService>();
 builder.Services.AddScoped<IAreaService,       AreaService>();
 builder.Services.AddScoped<IVisitaService,     VisitaService>();
+
+builder.Services.AddScoped<JwtHelper>();
 
 // ── AutoMapper ────────────────────────────────────────────────────────────────
 builder.Services.AddAutoMapper(typeof(MappingProfile));

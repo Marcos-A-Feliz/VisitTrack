@@ -32,7 +32,7 @@ public static class DbSeeder
                 {
                     FirstName = "Admin",
                     LastName = "Sistema",
-                    Email = "admin@visittrack.com",
+                    Email = "admin@visitflow.com",
                     PasswordHash = adminHash,
                     UserRoles = new List<UserRole> { new() { Role = adminRole } }
                 },
@@ -40,7 +40,7 @@ public static class DbSeeder
                 {
                     FirstName = "Pedro",
                     LastName = "Seguridad",
-                    Email = "guardia@visittrack.com",
+                    Email = "guardia@visitflow.com",
                     PasswordHash = guardiaHash,
                     UserRoles = new List<UserRole> { new() { Role = guardiaRole } }
                 }
@@ -63,10 +63,10 @@ public static class DbSeeder
         {
             var areas = await context.Areas.ToListAsync();
             context.Empleados.AddRange(
-                new Empleado { Nombre = "Carlos", Apellido = "González", Email = "carlos@visittrack.com", Puesto = "Analista", AreaId = areas[1].Id },
-                new Empleado { Nombre = "María", Apellido = "López", Email = "maria@visittrack.com", Puesto = "Directora RRHH", AreaId = areas[0].Id },
-                new Empleado { Nombre = "José", Apellido = "Martínez", Email = "jose@visittrack.com", Puesto = "Contador", AreaId = areas[2].Id },
-                new Empleado { Nombre = "Laura", Apellido = "Fernández", Email = "laura@visittrack.com", Puesto = "Gerente", AreaId = areas[3].Id }
+                new Empleado { Nombre = "Carlos", Apellido = "González", Email = "carlos@visitflow.com", Puesto = "Analista", AreaId = areas[1].Id },
+                new Empleado { Nombre = "María", Apellido = "López", Email = "maria@visitflow.com", Puesto = "Directora RRHH", AreaId = areas[0].Id },
+                new Empleado { Nombre = "José", Apellido = "Martínez", Email = "jose@visitflow.com", Puesto = "Contador", AreaId = areas[2].Id },
+                new Empleado { Nombre = "Laura", Apellido = "Fernández", Email = "laura@visitflow.com", Puesto = "Gerente", AreaId = areas[3].Id }
             );
             await context.SaveChangesAsync();
         }
@@ -83,9 +83,9 @@ public static class DbSeeder
         if (!await context.Visitas.AnyAsync())
         {
             var visitante = await context.Visitantes.FirstAsync();
-            var empleado = await context.Empleados.FirstAsync(e => e.Email == "carlos@visittrack.com");
+            var empleado = await context.Empleados.FirstAsync(e => e.Email == "carlos@visitflow.com");
             var area = await context.Areas.FirstAsync(a => a.Nombre == "Tecnología");
-            var guardia = await context.Users.FirstAsync(u => u.Email == "guardia@visittrack.com");
+            var guardia = await context.Users.FirstAsync(u => u.Email == "guardia@visitflow.com");
 
             context.Visitas.Add(new Visita
             {

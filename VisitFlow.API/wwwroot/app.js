@@ -1,6 +1,5 @@
 /* VisitFlow — app.js */
-const API = '/api';
-
+const API = 'http://localhost:5044/api';
 // Estado global
 let token = null;
 let currentUser = null;
@@ -53,13 +52,22 @@ async function login() {
     btn.textContent = 'Ingresando...'; btn.disabled = true;
     try {
         const data = await POST('/auth/login', { email, password });
+        console.log('Respuesta del login:', data); 
+
         if (!data) return;
+
         token = data.token;
-        currentUser = { nombre: data.user.firstName + ' ' + data.user.lastName, roles: data.user.roles };
+        currentUser = {
+            nombre: data.user.firstName + ' ' + data.user.lastName,
+            roles: data.user.roles
+        };
+        console.log('currentUser:', currentUser); 
+
         localStorage.setItem('vt_token', token);
         localStorage.setItem('vt_user', JSON.stringify(currentUser));
         showApp();
     } catch (e) {
+        console.error('Error en login:', e); 
         toast(e.message, false);
     } finally {
         btn.textContent = 'Iniciar sesión'; btn.disabled = false;
@@ -160,7 +168,8 @@ function renderTablaVisitas(list, acciones) {
       <td>${badge(v.estado)}</td>
       <td>${v.motivo}</td>
       ${acciones ? `<td style="white-space:nowrap">
-        ${v.estado === 'EnCurso' ? `<button class="btn btn-green" onclick="registrarSalida(${v.id})">🚪 Salida</button> ` : ''}
+        <button class="btn btn-gray" onclick="modalEditarVisita(${v.id})">✏️</button>
+        ${v.estado === 'EnCurso' ? `<button class="btn btn-green" onclick="registrarSalida(${v.id})">🚪 Salida</button>` : ''}
         ${v.estado !== 'Finalizada' && v.estado !== 'Cancelada' ? `<button class="btn btn-red" onclick="cancelarVisita(${v.id})">❌ Cancelar</button>` : ''}
       </td>` : ''}
     </tr>`).join('');
@@ -170,7 +179,6 @@ function renderTablaVisitas(list, acciones) {
     ${acciones ? '<th></th>' : ''}
   </tr></thead><tbody id="tbl-visitas">${rows}</tbody></table>`;
 }
-
 async function modalNuevaVisita() {
     const [visitantes, empleados, areas] = await Promise.all([GET('/visitantes'), GET('/empleados'), GET('/areas')]);
     openModal(`
@@ -194,6 +202,15 @@ async function modalNuevaVisita() {
       <div class="fg"><label>Motivo *</label>
         <input id="m-motivo" placeholder="Ej: Reunión, entrega de documentos...">
       </div>
+      <!-- ✅ NUEVO: Select de estado -->
+      <div class="fg"><label>Estado</label>
+        <select id="m-estado">
+          <option value="EnCurso">En curso</option>
+          <option value="Pendiente">Pendiente</option>
+          <option value="Finalizada">Finalizada</option>
+          <option value="Cancelada">Cancelada</option>
+        </select>
+      </div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-gray" onclick="closeModal()">Cancelar</button>
@@ -201,7 +218,6 @@ async function modalNuevaVisita() {
     </div>`);
     window._empleados = empleados;
 }
-
 function cargarEmps(areaId) {
     const sel = document.getElementById('m-empleado');
     const list = (window._empleados || []).filter(e => e.areaId == areaId);
@@ -214,16 +230,23 @@ async function crearVisita() {
     const areaId = +document.getElementById('m-area').value;
     const empleadoResponsableId = +document.getElementById('m-empleado').value;
     const motivo = document.getElementById('m-motivo').value.trim();
+    const estado = document.getElementById('m-estado').value;  
     if (!visitanteId || !areaId || !empleadoResponsableId || !motivo)
         return toast('Completa todos los campos', false);
+
     try {
-        await POST('/visitas', { visitanteId, empleadoResponsableId, areaId, motivo });
+        await POST('/visitas', {
+            visitanteId,
+            empleadoResponsableId,
+            areaId,
+            motivo,
+            estado  
+        });
         toast('Visita registrada');
         closeModal();
         go('visitas');
     } catch (e) { toast(e.message, false); }
 }
-
 async function registrarSalida(id) {
     if (!confirm('¿Registrar salida?')) return;
     try {
@@ -233,7 +256,6 @@ async function registrarSalida(id) {
     } catch (e) { toast(e.message, false); }
 }
 
-// ✅ NUEVA FUNCIÓN
 async function cancelarVisita(id) {
     if (!confirm('¿Cancelar esta visita?')) return;
     try {
@@ -243,6 +265,58 @@ async function cancelarVisita(id) {
     } catch (e) { toast(e.message, false); }
 }
 
+async function modalEditarVisita(id) {
+    const visita = await GET('/visitas/' + id);
+    const [empleados, areas] = await Promise.all([GET('/empleados'), GET('/areas')]);
+
+    openModal(`
+    <div class="modal-head"><h3>Editar visita #${id}</h3><button class="btn-x" onclick="closeModal()">✕</button></div>
+    <div class="modal-body">
+      <div class="fg"><label>Motivo</label>
+        <input id="ev-motivo" value="${visita.motivo || ''}">
+      </div>
+      <div class="fg"><label>Área</label>
+        <select id="ev-area">
+          <option value="">Seleccionar...</option>
+          ${areas.map(a => `<option value="${a.id}" ${a.id == visita.areaId ? 'selected' : ''}>${a.nombre}</option>`).join('')}
+        </select>
+      </div>
+      <div class="fg"><label>Empleado responsable</label>
+        <select id="ev-empleado">
+          <option value="">Seleccionar...</option>
+          ${empleados.map(e => `<option value="${e.id}" ${e.id == visita.empleadoResponsableId ? 'selected' : ''}>${e.nombre} ${e.apellido}</option>`).join('')}
+        </select>
+      </div>
+      <div class="fg"><label>Estado</label>
+        <select id="ev-estado">
+          <option value="Pendiente" ${visita.estado === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
+          <option value="EnCurso" ${visita.estado === 'EnCurso' ? 'selected' : ''}>En curso</option>
+          <option value="Finalizada" ${visita.estado === 'Finalizada' ? 'selected' : ''}>Finalizada</option>
+          <option value="Cancelada" ${visita.estado === 'Cancelada' ? 'selected' : ''}>Cancelada</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-gray" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-blue" onclick="guardarEdicionVisita(${id})">💾 Guardar</button>
+    </div>`);
+}
+
+async function guardarEdicionVisita(id) {
+    const dto = {
+        motivo: document.getElementById('ev-motivo').value.trim() || null,
+        areaId: +document.getElementById('ev-area').value || null,
+        empleadoResponsableId: +document.getElementById('ev-empleado').value || null,
+        estado: document.getElementById('ev-estado').value
+    };
+
+    try {
+        await PUT('/visitas/' + id, dto);
+        toast('Visita actualizada');
+        closeModal();
+        go('visitas');
+    } catch (e) { toast(e.message, false); }
+}
 function filtrarEstado(estado) {
     const rows = document.querySelectorAll('#tbl-visitas tr');
     rows.forEach(r => {

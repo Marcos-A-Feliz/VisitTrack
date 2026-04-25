@@ -63,8 +63,8 @@ public class VisitaService : IVisitaService
     {
         var visita = _mapper.Map<Visita>(dto);
         visita.FechaEntrada = DateTime.Now;
-        visita.Estado = "EnCurso";
         visita.UserId = userId;
+        visita.Estado = dto.Estado;  
 
         await _unitOfWork.Visitas.AddAsync(visita);
         await _unitOfWork.SaveChangesAsync();
@@ -104,6 +104,21 @@ public class VisitaService : IVisitaService
 
         visita.Estado = "Cancelada";
         visita.FechaSalida = DateTime.Now;
+
+        await _unitOfWork.Visitas.UpdateAsync(visita);
+        await _unitOfWork.SaveChangesAsync();
+
+        return _mapper.Map<VisitaDto>(visita);
+    }
+    public async Task<VisitaDto?> UpdateAsync(int id, UpdateVisitaDto dto)
+    {
+        var visita = await _unitOfWork.Visitas.GetByIdAsync(id);
+        if (visita == null) return null;
+
+        visita.Motivo = dto.Motivo ?? visita.Motivo;
+        visita.Estado = dto.Estado ?? visita.Estado;
+        visita.EmpleadoResponsableId = dto.EmpleadoResponsableId ?? visita.EmpleadoResponsableId;
+        visita.AreaId = dto.AreaId ?? visita.AreaId;
 
         await _unitOfWork.Visitas.UpdateAsync(visita);
         await _unitOfWork.SaveChangesAsync();
