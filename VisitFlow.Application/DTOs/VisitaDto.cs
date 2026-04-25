@@ -29,6 +29,7 @@ public class CreateVisitaDto
     public int VisitanteId { get; set; }
     public int EmpleadoResponsableId { get; set; }
     public int AreaId { get; set; }
+    public string Estado { get; set; } = "EnCurso";  
 }
 
 public class UpdateVisitaDto

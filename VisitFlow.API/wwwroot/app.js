@@ -194,6 +194,15 @@ async function modalNuevaVisita() {
       <div class="fg"><label>Motivo *</label>
         <input id="m-motivo" placeholder="Ej: Reunión, entrega de documentos...">
       </div>
+      <!-- ✅ NUEVO: Select de estado -->
+      <div class="fg"><label>Estado</label>
+        <select id="m-estado">
+          <option value="EnCurso">En curso</option>
+          <option value="Pendiente">Pendiente</option>
+          <option value="Finalizada">Finalizada</option>
+          <option value="Cancelada">Cancelada</option>
+        </select>
+      </div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-gray" onclick="closeModal()">Cancelar</button>
@@ -201,7 +210,6 @@ async function modalNuevaVisita() {
     </div>`);
     window._empleados = empleados;
 }
-
 function cargarEmps(areaId) {
     const sel = document.getElementById('m-empleado');
     const list = (window._empleados || []).filter(e => e.areaId == areaId);
@@ -214,16 +222,23 @@ async function crearVisita() {
     const areaId = +document.getElementById('m-area').value;
     const empleadoResponsableId = +document.getElementById('m-empleado').value;
     const motivo = document.getElementById('m-motivo').value.trim();
+    const estado = document.getElementById('m-estado').value;  
     if (!visitanteId || !areaId || !empleadoResponsableId || !motivo)
         return toast('Completa todos los campos', false);
+
     try {
-        await POST('/visitas', { visitanteId, empleadoResponsableId, areaId, motivo });
+        await POST('/visitas', {
+            visitanteId,
+            empleadoResponsableId,
+            areaId,
+            motivo,
+            estado  
+        });
         toast('Visita registrada');
         closeModal();
         go('visitas');
     } catch (e) { toast(e.message, false); }
 }
-
 async function registrarSalida(id) {
     if (!confirm('¿Registrar salida?')) return;
     try {
@@ -233,7 +248,6 @@ async function registrarSalida(id) {
     } catch (e) { toast(e.message, false); }
 }
 
-// ✅ NUEVA FUNCIÓN
 async function cancelarVisita(id) {
     if (!confirm('¿Cancelar esta visita?')) return;
     try {

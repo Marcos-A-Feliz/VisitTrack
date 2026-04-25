@@ -63,8 +63,8 @@ public class VisitaService : IVisitaService
     {
         var visita = _mapper.Map<Visita>(dto);
         visita.FechaEntrada = DateTime.Now;
-        visita.Estado = "EnCurso";
         visita.UserId = userId;
+        visita.Estado = dto.Estado;  
 
         await _unitOfWork.Visitas.AddAsync(visita);
         await _unitOfWork.SaveChangesAsync();
