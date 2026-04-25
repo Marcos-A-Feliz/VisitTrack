@@ -150,8 +150,8 @@ async function pageVisitas(el) {
 }
 
 function renderTablaVisitas(list, acciones) {
-  if (!list.length) return '<div class="empty">No hay visitas</div>';
-  const rows = list.map(v => `
+    if (!list.length) return '<div class="empty">No hay visitas</div>';
+    const rows = list.map(v => `
     <tr>
       <td>${v.id}</td>
       <td><strong>${v.visitanteNombre}</strong><br><small style="color:var(--muted)">${v.visitanteDocumento}</small></td>
@@ -163,15 +163,15 @@ function renderTablaVisitas(list, acciones) {
       <td>${v.motivo}</td>
       ${acciones ? `<td>
         ${v.estado === 'EnCurso' ? `<button class="btn btn-green" onclick="registrarSalida(${v.id})">🚪 Salida</button>` : ''}
+        ${v.estado !== 'Finalizada' && v.estado !== 'Cancelada' ? `<button class="btn btn-red" onclick="cancelarVisita(${v.id})">❌ Cancelar</button>` : ''}
       </td>` : ''}
     </tr>`).join('');
-  return `<table><thead><tr>
+    return `<table><thead><tr>
     <th>#</th><th>Visitante</th><th>Responsable</th><th>Área</th>
     <th>Entrada</th><th>Salida</th><th>Estado</th><th>Motivo</th>
     ${acciones ? '<th></th>' : ''}
   </tr></thead><tbody id="tbl-visitas">${rows}</tbody></table>`;
 }
-
 async function modalNuevaVisita() {
   const [visitantes, empleados, areas] = await Promise.all([GET('/visitantes'), GET('/empleados'), GET('/areas')]);
   openModal(`
@@ -233,6 +233,15 @@ async function registrarSalida(id) {
     toast('Salida registrada');
     go('visitas');
   } catch(e) { toast(e.message, false); }
+}
+
+async function cancelarVisita(id) {
+    if (!confirm('¿Cancelar esta visita?')) return;
+    try {
+        await PUT(`/visitas/${id}/cancelar`);
+        toast('Visita cancelada');
+        go('visitas');
+    } catch (e) { toast(e.message, false); }
 }
 
 function filtrarEstado(estado) {

@@ -13,5 +13,6 @@ public interface IVisitaService
     Task<IEnumerable<VisitaDto>> GetActivasAsync();
     Task<VisitaDto> CreateAsync(CreateVisitaDto dto, int userId);
     Task<VisitaDto?> RegistrarSalidaAsync(int id);
+    Task<VisitaDto?> CancelarAsync(int id);  
     Task<bool> DeleteAsync(int id);
 }

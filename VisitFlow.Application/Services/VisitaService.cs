@@ -96,4 +96,18 @@ public class VisitaService : IVisitaService
         await _unitOfWork.SaveChangesAsync();
         return true;
     }
+
+    public async Task<VisitaDto?> CancelarAsync(int id)
+    {
+        var visita = await _unitOfWork.Visitas.GetByIdAsync(id);
+        if (visita == null) return null;
+
+        visita.Estado = "Cancelada";
+        visita.FechaSalida = DateTime.Now;
+
+        await _unitOfWork.Visitas.UpdateAsync(visita);
+        await _unitOfWork.SaveChangesAsync();
+
+        return _mapper.Map<VisitaDto>(visita);
+    }
 }

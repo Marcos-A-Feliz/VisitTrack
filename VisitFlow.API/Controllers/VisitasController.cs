@@ -1,8 +1,9 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using VisitFlow.Application.Contracts;
 using VisitFlow.Application.DTOs;
+using VisitFlow.Application.Services;
 
 namespace VisitFlow.API.Controllers;
 
@@ -67,5 +68,15 @@ public class VisitasController : ControllerBase
     {
         var ok = await _svc.DeleteAsync(id);
         return ok ? NoContent() : NotFound();
+    }
+
+    [HttpPut("{id}/cancelar")]
+    [Authorize(Roles = "Admin,Guardia")]
+    public async Task<IActionResult> Cancelar(int id)
+    {
+        var visita = await _svc.CancelarAsync(id);
+        if (visita == null)
+            return NotFound(new { message = "Visita no encontrada" });
+        return Ok(new { message = "Visita cancelada correctamente", visita });
     }
 }
