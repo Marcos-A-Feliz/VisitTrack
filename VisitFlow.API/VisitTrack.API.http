@@ -1,0 +1,6 @@
+@VisitTrack.API_HostAddress = http://localhost:5044
+
+GET {{VisitTrack.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
